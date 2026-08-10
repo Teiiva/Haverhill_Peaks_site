@@ -1,0 +1,11 @@
+Images à déposer ici :
+
+  hero.jpg          → grande photo live, paysage, 2000 px de large minimum (page d'accueil)
+  duo.jpg           → photo des deux frères, format paysage 4/3 (page d'accueil)
+  gallery/01.jpg …  → les photos de la galerie (page Média), 01 à 09
+
+Le site applique automatiquement le traitement caméscope : virage bleu, contraste,
+franges chromatiques et grain. Inutile de retoucher les images à l'avance — mieux vaut
+fournir des originaux propres et laisser le site faire le rendu.
+
+Tant qu'une image manque, une mire « NO SIGNAL » s'affiche à la place. Rien ne casse.

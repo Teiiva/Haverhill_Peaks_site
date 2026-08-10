@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Haverhill Peaks — Garage folk, Vannes</title>
+<meta name="description" content="Haverhill Peaks, duo garage folk de Vannes. Écoute, dates de concert et booking.">
+<meta property="og:title" content="Haverhill Peaks">
+<meta property="og:description" content="Garage folk · Vannes. Ici tout est joué live.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- COUCHES CAMÉSCOPE -->
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="tape-tint" aria-hidden="true"></div>
+<div class="sync" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="curve" aria-hidden="true"></div>
+<div class="wipe" aria-hidden="true"></div>
+<div class="osd" aria-hidden="true">
+  <div class="bl"><span>CH 01</span><span data-counter>0000</span></div>
+  <div class="br"><span data-clock></span></div>
+</div>
+
+
+<div class="page">
+
+<header class="nav">
+  <div class="nav-left">
+    <span class="nav-osd"><i class="dot"></i>REC <b data-timecode>00:00:00:00</b></span>
+    <a class="brand" href="index.html">HAVERHILL <b>PEAKS</b>
+      <span class="nav-eq"><i></i><i></i><i></i><i></i><i></i></span>
+    </a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-osd"><span class="sp">SP</span><span class="batt"><i></i><i></i><i></i></span></span>
+    <nav class="nav-links">
+      <a href="index.html" aria-current="page">Accueil</a>
+      <a href="media.html">Média</a>
+      <a href="booking.html">Booking</a>
+    </nav>
+    <button class="snd" aria-pressed="true">SON ■</button>
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+<div class="drawer">
+  <a href="index.html">Accueil</a>
+  <a href="media.html">Média</a>
+  <a href="booking.html">Booking</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"><img src="assets/img/hero.png" alt="" data-guard></div>
+  <div class="wrap hero-inner">
+    <h1 class="hero-title chroma big beat">
+      <span class="line"><span>Haverhill</span></span>
+      <span class="line"><span>Peaks</span></span>
+    </h1>
+    <p class="hero-sub">Garage folk · Vannes</p>
+    <div class="hero-socials" data-socials></div>
+    <div class="hero-actions">
+      <button class="btn" data-play-first>
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> Écouter
+      </button>
+      <a class="btn" href="#dates">Dates</a>
+      <a class="btn btn-rec" href="booking.html">● Booking</a>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-track" data-speed="22">
+    <span>Nightcall</span><span>Dark Passenger</span><span>After 8</span><span>Ici tout est joué live</span>
+  </div>
+</div>
+
+<!-- BIO COURTE -->
+<section>
+  <div class="wrap split">
+    <div>
+      <p class="osd-label" data-reveal>Le duo</p>
+      <h2 class="h-xl chroma" data-split style="margin:1rem 0 1.4rem">Deux frères</h2>
+      <p class="lead" data-reveal data-delay=".08">
+        Hugo et Sylvain fusionnent le grunge au folk. Guitare poussée dans le rouge, basse à la
+        fuzz, deux voix en harmonie, batterie jouée aux pieds. Pas de bande, pas de clic :
+        le disque et la scène, c'est le même son.
+      </p>
+      <p class="mono muted" data-reveal data-delay=".14" style="margin-top:1.6rem">
+        VANNES (56) · DEPUIS 2020 · 2 EP + 2 SINGLES
+      </p>
+    </div>
+    <div class="frame" data-reveal data-delay=".08" style="aspect-ratio:4/3">
+      <img src="assets/img/duo.png" alt="Hugo et Sylvain Legrand" data-guard>
+      <span class="stamp">HUGO &amp; SYLVAIN</span>
+    </div>
+  </div>
+</section>
+
+<!-- ÉCOUTE -->
+<section id="ecoute" style="padding-top:0">
+  <div class="wrap">
+    <p class="osd-label" data-reveal>Écoute &amp; téléchargement</p>
+    <h2 class="h-lg chroma" data-split style="margin:1rem 0 1.6rem">La bande</h2>
+    <div class="deck" data-reveal data-delay=".08">
+      <div class="deck-head">
+        <span data-deck-state>❚❚ PAUSE</span>
+        <span>A / B · STEREO</span>
+      </div>
+      <div data-tracklist></div>
+    </div>
+    <p class="mono muted" style="margin-top:.9rem">ESPACE = LECTURE / PAUSE · MAJ + ← → = PISTE</p>
+    <p class="player-error mono" style="color:var(--rec)"></p>
+  </div>
+</section>
+
+<!-- DATES -->
+<section id="dates" style="padding-top:0">
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;margin-bottom:1.6rem">
+      <div>
+        <p class="osd-label" data-reveal>Sur scène</p>
+        <h2 class="h-lg chroma" data-split style="margin-top:1rem">Prochaines dates</h2>
+      </div>
+      <a class="btn btn-rec" href="booking.html" data-reveal>● Programmer une date</a>
+    </div>
+    <div data-dates="5"></div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="strip-track" data-dir="right" data-speed="26">
+    <span>Bars</span><span>Festivals</span><span>Salles</span><span>Bretagne &amp; au-delà</span>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:2rem">
+      <div>
+        <p class="osd-label">Booking</p>
+        <p style="margin-top:.6rem"><a class="mono" data-band="email" href="#"></a></p>
+        <p class="mono muted"><span data-band="contact"></span> · <a data-band="phone" href="#"></a></p>
+      </div>
+      <div>
+        <p class="osd-label">Réseaux</p>
+        <div class="socials" data-socials style="margin-top:.6rem"></div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year></span> HAVERHILL PEAKS</span>
+      <span>VANNES · FR</span>
+      <span>ICI TOUT EST JOUÉ LIVE</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /.page -->
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="assets/js/site-data.js"></script>
+<script src="assets/js/vhs.js"></script>
+<script src="assets/js/player.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

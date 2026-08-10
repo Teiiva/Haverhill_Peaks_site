@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Booking — Haverhill Peaks</title>
+<meta name="description" content="Demander un concert de Haverhill Peaks. Réponse sous 72 h.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<canvas id="snow" aria-hidden="true"></canvas>
+<div class="tape-tint" aria-hidden="true"></div>
+<div class="sync" aria-hidden="true"></div>
+<div class="scan" aria-hidden="true"></div>
+<div class="curve" aria-hidden="true"></div>
+<div class="wipe" aria-hidden="true"></div>
+<div class="osd" aria-hidden="true">
+  <div class="bl"><span>CH 03</span><span data-counter>0000</span></div>
+  <div class="br"><span data-clock></span></div>
+</div>
+
+
+<div class="page">
+
+<header class="nav">
+  <div class="nav-left">
+    <span class="nav-osd"><i class="dot"></i>REC <b data-timecode>00:00:00:00</b></span>
+    <a class="brand" href="index.html">HAVERHILL <b>PEAKS</b>
+      <span class="nav-eq"><i></i><i></i><i></i><i></i><i></i></span>
+    </a>
+  </div>
+  <div class="nav-right">
+    <span class="nav-osd"><span class="sp">SP</span><span class="batt"><i></i><i></i><i></i></span></span>
+    <nav class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="media.html">Média</a>
+      <a href="booking.html" aria-current="page">Booking</a>
+    </nav>
+    <button class="snd" aria-pressed="true">SON ■</button>
+    <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+<div class="drawer">
+  <a href="index.html">Accueil</a>
+  <a href="media.html">Média</a>
+  <a href="booking.html">Booking</a>
+</div>
+
+<section style="padding-top:calc(var(--nav-h) + clamp(3.5rem,8vw,6rem))">
+  <div class="wrap">
+    <p class="osd-label" data-reveal>Programmez-les</p>
+    <h1 class="h-xxl chroma big" data-split style="margin:1rem 0">Booking</h1>
+    <p class="lead" data-reveal data-delay=".08">
+      Duo autonome, set de 45 à 75 minutes, tout joué live. Dis-nous ce que tu prépares —
+      réponse sous 72 heures.
+    </p>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap split" style="align-items:start">
+
+    <form id="booking-form" class="form" data-reveal>
+      <input type="hidden" name="access_key" value="">
+      <input type="hidden" name="subject" value="Demande de concert — Haverhill Peaks">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+
+      <div class="form-row">
+        <div class="field"><label>Nom *</label><input type="text" name="name" required></div>
+        <div class="field"><label>Email *</label><input type="email" name="email" required></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Lieu</label><input type="text" name="venue"></div>
+        <div class="field"><label>Ville</label><input type="text" name="city"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Date souhaitée</label><input type="date" name="eventdate"></div>
+        <div class="field"><label>Type</label>
+          <select name="type">
+            <option value="">—</option>
+            <option>Salle</option>
+            <option>Festival</option>
+            <option>Bar / café-concert</option>
+            <option>Privé</option>
+            <option>Autre</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Message *</label><textarea name="message" required></textarea></div>
+
+      <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap">
+        <button type="submit" class="btn btn-rec">● Envoyer</button>
+        <span class="form-status"></span>
+      </div>
+    </form>
+
+    <aside data-reveal data-delay=".1" style="display:grid;gap:1.6rem">
+      <div>
+        <p class="osd-label">Contact direct</p>
+        <p style="margin-top:.6rem"><a class="mono" data-band="email" href="#"></a></p>
+        <p class="mono muted"><span data-band="contact"></span></p>
+        <p class="mono muted"><a data-band="phone" href="#"></a></p>
+      </div>
+      <div>
+        <p class="osd-label">En bref</p>
+        <p class="mono muted" style="margin-top:.6rem;line-height:2">
+          DUO · GUITARE, BASSE, VOIX, PERCUSSIONS AU PIED<br>
+          SET 45–75 MIN · PLATEAU 4×3 M MINIMUM<br>
+          BALANCES 45 MIN · BACKLINE AUTONOME<br>
+          GRAND OUEST EN DIRECT · FRANCE EN TOURNÉE
+        </p>
+      </div>
+      <div>
+        <p class="osd-label">Réseaux</p>
+        <div class="socials" data-socials style="margin-top:.6rem"></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-bottom" style="margin-top:0">
+      <span>© <span data-year></span> HAVERHILL PEAKS</span>
+      <span>VANNES · FR</span>
+      <span>ICI TOUT EST JOUÉ LIVE</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /.page -->
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+<script src="assets/js/site-data.js"></script>
+<script src="assets/js/vhs.js"></script>
+<script src="assets/js/player.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
