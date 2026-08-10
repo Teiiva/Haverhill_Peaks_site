@@ -13,7 +13,12 @@ window.HPLikes = (() => {
   'use strict';
 
   const cfg = (window.BAND && window.BAND.supabase) || {};
-  const online = !!(cfg.url && cfg.anonKey && !/REMPLACE/i.test(cfg.url + cfg.anonKey));
+  /* On tolère les URL copiées avec « /rest/v1 » au bout : c'est ce que
+     propose le tableau de bord, et le doublon donnait un 404 silencieux. */
+  const base = String(cfg.url || '').trim().replace(/\/+$/, '').replace(/\/rest\/v1$/, '');
+  const online = !!(base && cfg.anonKey && !/REMPLACE/i.test(base + cfg.anonKey));
+
+  const warn = (what, e) => console.warn(`[HPLikes] ${what} — repli sur le stockage local.`, e || '');
 
   const K_MINE  = 'hp-liked';        // ce que CE visiteur a voté
   const K_CACHE = 'hp-likes-cache';  // dernier état connu des compteurs
@@ -39,14 +44,16 @@ window.HPLikes = (() => {
     counts = readJSON(K_CACHE, {});
     if (online) {
       try {
-        const r = await fetch(`${cfg.url}/rest/v1/track_likes?select=slug,likes`, { headers: headers() });
+        const r = await fetch(`${base}/rest/v1/track_likes?select=slug,likes`, { headers: headers() });
         if (r.ok) {
           const fresh = {};
           (await r.json()).forEach(row => { fresh[row.slug] = row.likes | 0; });
           counts = fresh;
           writeJSON(K_CACHE, counts);
+        } else {
+          warn(`lecture refusée (HTTP ${r.status}) : ${await r.text()}`);
         }
-      } catch (e) { /* hors ligne : on garde le cache */ }
+      } catch (e) { warn('base injoignable', e); }
     }
     slugs.forEach(s => { if (typeof counts[s] !== 'number') counts[s] = 0; });
     return counts;
@@ -67,15 +74,17 @@ window.HPLikes = (() => {
 
     if (online) {
       try {
-        const r = await fetch(`${cfg.url}/rest/v1/rpc/bump_like`, {
+        const r = await fetch(`${base}/rest/v1/rpc/bump_like`, {
           method: 'POST', headers: headers(),
           body: JSON.stringify({ p_slug: s, p_delta: delta })
         });
         if (r.ok) {
           const v = await r.json();
           if (typeof v === 'number') { counts[s] = v; writeJSON(K_CACHE, counts); }
+        } else {
+          warn(`vote refusé (HTTP ${r.status}) : ${await r.text()}`);
         }
-      } catch (e) { /* le compteur local fait foi jusqu'au prochain chargement */ }
+      } catch (e) { warn('vote non transmis', e); }
     }
     return { count: get(s), liked: on };
   };

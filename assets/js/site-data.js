@@ -26,7 +26,7 @@ window.BAND = {
      La clé "anon" est publique par conception, elle ne donne accès qu'à ce
      que les règles de la base autorisent. */
   supabase: {
-    url:     "https://tgunipnfycojfdsonivl.supabase.co/rest/v1/",
+    url:     "https://tgunipnfycojfdsonivl.supabase.co",
     anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRndW5pcG5meWNvamZkc29uaXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYzNjgwNjAsImV4cCI6MjEwMTk0NDA2MH0.cFIqbqDKEewcmSYqYy2CC5Z9O474UZ_36wr0KVJiK4k"
   },
 
