@@ -315,7 +315,7 @@ body.is-playing .nav-eq { display: flex; }
 .track-eq i:nth-child(2) { animation-delay: .16s; } .track-eq i:nth-child(3) { animation-delay: .33s; }
 @keyframes eqb { 0%,100% { height: 22%; } 50% { height: 100%; } }
 body:not(.is-playing) .track-eq i { animation-play-state: paused; }
-@media (max-width: 600px) { .track { grid-template-columns: 34px 1fr auto; } .track-dur { display: none; } }
+/* (mise en page téléphone du lecteur : voir section 21) */
 
 .icon-btn {
   width: 38px; height: 38px; display: grid; place-items: center;
@@ -416,10 +416,7 @@ body.is-playing .playbar-now .reel { animation-play-state: running; }
 .pill { font-family: var(--ff-osd); font-size: .95rem; letter-spacing: .14em; text-transform: uppercase; padding: .12rem .6rem; border: 1px solid var(--line); color: var(--steel); }
 .pill.free { border-color: var(--cyan); color: var(--cyan); }
 .pill.soldout { border-color: var(--rec); color: var(--rec); }
-@media (max-width: 720px) {
-  .date-row { grid-template-columns: 82px 1fr; }
-  .date-time, .date-row .btn, .date-row .pill { grid-column: 2; justify-self: start; }
-}
+/* (mise en page téléphone des dates : voir section 21) */
 
 /* ---------- 18. Formulaire ---------- */
 .form { display: grid; gap: 1.3rem; max-width: 640px; }
@@ -467,6 +464,172 @@ body.glitching .osd { animation: jit .1s steps(2) 4; }
 }
 .wipe.on { animation: wipeIn .34s steps(4) forwards; }
 @keyframes wipeIn { 0% { opacity: 0; } 40% { opacity: .85; } 100% { opacity: 1; } }
+
+/* ============================================================
+   21. TÉLÉPHONE & TABLETTE
+   Tout est enfermé dans des media queries : l'affichage
+   ordinateur (≥ 861 px) n'est pas touché d'une ligne.
+   ============================================================ */
+@media (max-width: 860px) {
+
+  :root { --pad: 1.25rem; --nav-h: 56px; }
+
+  /* --- lisibilité générale, retours à la ligne --- */
+  body { font-size: 1rem; line-height: 1.6; }
+  p, li, .lead { text-wrap: pretty; overflow-wrap: break-word; }
+  h1, h2, h3 { text-wrap: balance; letter-spacing: 0; hyphens: none; }
+  section { padding-block: 3rem; }
+  .lead { font-size: 1rem; }
+  .mono { font-size: 1rem; letter-spacing: .06em; }
+  .osd-label { font-size: 1rem; letter-spacing: .1em; }
+
+  /* --- effets caméscope adoucis : la texture ne doit pas manger le texte --- */
+  .scan { opacity: .14; }
+  #snow { opacity: .045; }
+  .sync { display: none; }
+  .tape-tint { opacity: .7; }
+  .curve { background: radial-gradient(ellipse 155% 135% at 50% 50%, transparent 64%, rgba(0,0,0,.62) 100%); }
+  .chroma     { text-shadow: -1px 0 rgba(255,47,74,.65),   1px 0 rgba(85,214,255,.65); }
+  .chroma.big { text-shadow: -1.5px 0 rgba(255,47,74,.6), 1.5px 0 rgba(85,214,255,.6); }
+  .video-card .osd-play { text-shadow: -1px 0 rgba(255,47,74,.7), 1px 0 rgba(85,214,255,.7); }
+
+  /* --- habillage OSD du bas, discret --- */
+  .osd { font-size: .82rem; letter-spacing: .02em; }
+  .osd .bl, .osd .br { bottom: 10px; gap: .4rem; }
+
+  /* --- barre de navigation : tout doit tenir sur une ligne --- */
+  .nav { gap: .5rem; }
+  .nav-left  { gap: .6rem; }
+  .nav-right { gap: .5rem; }
+  .nav-osd { font-size: .9rem; letter-spacing: .02em; gap: .3rem; }
+  .brand { font-size: .88rem; letter-spacing: .04em; gap: .4rem; }
+  .snd { font-size: .9rem; letter-spacing: .06em; padding: .3rem .45rem; }
+  .burger { width: 40px; height: 40px; }
+  .burger span { left: 9px; width: 22px; }
+  .drawer a { line-height: 1.05; }
+
+  /* --- boutons : cible tactile confortable, texte moins étiré --- */
+  .btn {
+    font-size: 1rem; letter-spacing: .1em; gap: .5rem;
+    padding: .68rem 1rem; min-height: 44px;
+  }
+
+  /* --- hero --- */
+  .hero-title { font-size: clamp(2.9rem, 15vw, 5.4rem); }
+  .hero-sub { font-size: 1.05rem; letter-spacing: .2em; margin-top: .9rem; }
+
+  /* réseaux : une seule ligne, on fait glisser du doigt */
+  .hero-socials {
+    margin-top: 1.7rem; gap: .45rem; flex-wrap: nowrap;
+    overflow-x: auto; overscroll-behavior-inline: contain;
+    scrollbar-width: none; -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: calc(var(--pad) * -1); padding-inline: var(--pad);
+    scroll-padding-inline: var(--pad);
+  }
+  .hero-socials::-webkit-scrollbar { display: none; }
+  .hero-socials a { flex: none; font-size: .95rem; letter-spacing: .1em; padding: .5rem .7rem; }
+
+  /* Écouter | Dates sur une ligne, Booking en pleine largeur */
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: 1.1rem; }
+  .hero-actions > .btn { justify-content: center; padding-inline: .6rem; }
+  .hero-actions > .btn:last-child { grid-column: 1 / -1; }
+
+  /* --- bandeau défilant --- */
+  .strip-track { font-size: 1.05rem; letter-spacing: .14em; gap: 1.5rem; }
+  .strip-track span { gap: 1.5rem; }
+
+  /* --- lecteur --- */
+  .deck-head { font-size: .92rem; letter-spacing: .1em; padding: .6rem .75rem; }
+  .track {
+    grid-template-columns: 26px minmax(0,1fr) auto;
+    gap: .7rem; padding: .8rem .75rem;
+  }
+  .track-n { font-size: 1.05rem; }
+  .track-title { font-size: 1.05rem; }
+  .track-sub { font-size: .9rem; letter-spacing: .08em; }
+  .track-dur { display: none; }
+  .track-eq, .track.is-active .track-eq { display: none; }
+  .icon-btn { width: 40px; height: 40px; }
+
+  .playbar-inner { padding: .5rem var(--pad); }
+  .playbar-now { gap: .6rem; }
+  .playbar-now .reel { width: 30px; height: 30px; }
+  .playbar-now .t { font-size: .95rem; }
+  .playbar-now .s { font-size: .9rem; letter-spacing: .06em; }
+
+  /* --- dates : date à gauche, lieu au centre, bouton à droite --- */
+  .date-row {
+    grid-template-columns: 62px minmax(0,1fr) auto;
+    gap: .25rem .8rem; padding: .9rem .1rem; align-items: center;
+  }
+  .date-row > :nth-child(1) { grid-row: 1 / span 2; }
+  .date-row > :nth-child(2) { grid-column: 2; grid-row: 1; }
+  .date-row > :nth-child(3) { grid-column: 2; grid-row: 2; justify-self: start; }
+  .date-row > :nth-child(4) { grid-column: 3; grid-row: 1 / span 2; justify-self: end; align-self: center; }
+  .date-box  { font-size: 1.12rem; letter-spacing: .01em; line-height: 1.15; }
+  .date-venue { font-size: 1.05rem; }
+  .date-city { font-size: .9rem; letter-spacing: .08em; }
+  .date-time { font-size: .92rem; letter-spacing: .06em; }
+  .date-row .btn { min-height: 38px; padding: .42rem .75rem; font-size: .92rem; letter-spacing: .08em; }
+  .pill { font-size: .85rem; letter-spacing: .08em; }
+
+  /* --- galerie & visionneuse --- */
+  .lightbox { padding: 3vmin; }
+  .lightbox .icon-btn { width: 44px; height: 44px; }
+  .lightbox .lb-close { top: .8rem; right: .8rem; }
+  .lightbox .lb-prev { left: .5rem; } .lightbox .lb-next { right: .5rem; }
+  .lightbox .lb-cap { bottom: .8rem; font-size: .95rem; letter-spacing: .1em; }
+  .frame .stamp { font-size: .88rem; }
+  .video-card .cap { font-size: .95rem; left: .6rem; bottom: .5rem; }
+
+  /* --- formulaire : 16px minimum, sinon iOS zoome au clic --- */
+  .form { gap: 1.1rem; }
+  .form-row { gap: 1.1rem; }
+  .field label { font-size: .95rem; letter-spacing: .12em; }
+  .field input, .field textarea, .field select { font-size: 16px; padding: .8rem .7rem; }
+  .field textarea { min-height: 140px; }
+  .form-status { font-size: 1rem; }
+
+  /* --- pied de page --- */
+  .footer { padding-block: 2.5rem 3rem; }
+  .socials { gap: .8rem 1.1rem; }
+  .socials a { font-size: 1rem; letter-spacing: .1em; }
+  .footer-bottom { flex-direction: column; gap: .3rem; margin-top: 1.8rem; font-size: .92rem; letter-spacing: .08em; }
+
+  /* --- décrochage plus doux : moins de secousse sur petit écran --- */
+  @keyframes tear {
+    0%   { transform: translate(0,0); filter: none; }
+    50%  { transform: translate(3px,-1px); filter: hue-rotate(-18deg) contrast(1.15); }
+    100% { transform: translate(0,0); filter: none; }
+  }
+}
+
+/* le survol n'existe pas au doigt : on retire les décalages parasites */
+@media (hover: none) {
+  .track:hover { padding-left: 1rem; background: none; }
+  .track:hover::before { transform: scaleY(0); }
+  .date-row:hover { padding-left: .1rem; background: none; }
+  .date-row:hover .date-venue { color: inherit; }
+  .frame:hover img, .video-card:hover img { transform: none; }
+  .frame:hover img { filter: grayscale(.3) contrast(1.2) saturate(1.45) hue-rotate(185deg) brightness(.8); }
+  .video-card:hover img { filter: grayscale(.35) brightness(.55) saturate(1.4) hue-rotate(185deg); }
+  .btn:hover { color: var(--cyan); background: rgba(85,214,255,.06); box-shadow: none; }
+  .btn-rec:hover { color: var(--rec); background: rgba(255,47,74,.07); }
+  .nav-links a:hover::after { opacity: 0; animation: none; }
+}
+
+/* très petits écrans (≤ 400 px) */
+@media (max-width: 400px) {
+  :root { --pad: 1rem; }
+  .nav-right > .nav-osd { display: none; }
+  .nav-osd b { display: none; }
+  .brand { font-size: .82rem; }
+  .date-row { grid-template-columns: 56px minmax(0,1fr); }
+  .date-row > :nth-child(4) { grid-column: 2; grid-row: 3; justify-self: start; }
+  .date-row > :nth-child(1) { grid-row: 1 / span 3; align-self: start; }
+  .date-row { gap: .3rem .7rem; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
