@@ -14,7 +14,7 @@ window.BAND = {
 
   /* Clé Web3Forms pour le formulaire de booking (gratuit, https://web3forms.com).
      Sans clé, le formulaire ouvre le logiciel de mail avec le message pré-rempli. */
-  formAccessKey: "REMPLACE-MOI-PAR-TA-CLE-WEB3FORMS",
+  formAccessKey: "99d8799b-d12f-48b5-9aaa-883cf4c5ba96",
 
   socials: [
     { label: "Bandcamp",  url: "https://haverhillpeaks.bandcamp.com/" },
