@@ -16,6 +16,10 @@ window.BAND = {
      Sans clé, le formulaire ouvre le logiciel de mail avec le message pré-rempli. */
   formAccessKey: "99d8799b-d12f-48b5-9aaa-883cf4c5ba96",
 
+  /* Photographe affiché au survol des photos, sous le nom du cliché.
+     Une photo peut le remplacer par son propre champ "credit" (voir § 4). */
+  photoCredit: "@ismahein",
+
   socials: [
     { label: "Bandcamp",  url: "https://haverhillpeaks.bandcamp.com/" },
     { label: "Spotify",   url: "https://open.spotify.com/album/6znrihZcKt16riH6OydlaJ" },
@@ -61,17 +65,19 @@ window.VIDEOS = [
 
 /* ---------- 4. PHOTOS ----------
    Fichiers dans assets/img/gallery/
+   credit : facultatif. Sans lui, c'est BAND.photoCredit qui s'affiche.
+            Exemple :  { src: "...", caption: "Studio", credit: "@autre_compte" }
 ------------------------------------------------ */
 window.PHOTOS = [
-  { src: "assets/img/gallery/01.png", caption: "Live" },
-  { src: "assets/img/gallery/02.png", caption: "Vannes" },
-  { src: "assets/img/gallery/03.png", caption: "L'Échonova" },
-  { src: "assets/img/gallery/04.png", caption: "Backstage" },
-  { src: "assets/img/gallery/05.png", caption: "Le Valhalla" },
-  { src: "assets/img/gallery/06.png", caption: "Studio" },
-  { src: "assets/img/gallery/07.png", caption: "La Corde Raide" },
-  { src: "assets/img/gallery/08.png", caption: "Hugo & Sylvain" },
-  { src: "assets/img/gallery/09.png", caption: "Sur la route" }
+  { src: "assets/img/gallery/01.png", caption: "Live" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/02.png", caption: "Vannes" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/03.png", caption: "L'Échonova" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/04.png", caption: "Backstage" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/05.png", caption: "Le Valhalla" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/06.png", caption: "Studio" , credit: " © Fred Lombarde"},
+  { src: "assets/img/gallery/07.png", caption: "La Corde Raide" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/08.png", caption: "Hugo & Sylvain" , credit: " © Fred Lombarde" },
+  { src: "assets/img/gallery/09.png", caption: "Sur la route" , credit: " © Fred Lombarde"}
 ];
 
 /* ---------- 5. DATES ----------

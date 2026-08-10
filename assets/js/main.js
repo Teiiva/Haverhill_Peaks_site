@@ -193,10 +193,15 @@
   const renderGallery = root => {
     if (!root) return;
     const photos = window.PHOTOS || [];
+    // crédit du cliché : celui de la photo, sinon celui du site
+    const credit = p => p.credit || (window.BAND && window.BAND.photoCredit) || '';
     root.innerHTML = photos.map((p, i) => `
       <figure class="shot frame" data-i="${i}">
         <img src="${p.src}" alt="${p.caption}" loading="lazy">
-        <figcaption class="stamp">${String(i + 1).padStart(2, '0')} · ${p.caption}</figcaption>
+        <figcaption class="stamp">
+          <span class="stamp-t">${String(i + 1).padStart(2, '0')} · ${p.caption}</span>
+          ${credit(p) ? `<span class="stamp-c">${credit(p)}</span>` : ''}
+        </figcaption>
       </figure>`).join('');
     $$('img', root).forEach((img, i) => guard(img, 'PHOTO ' + String(i + 1).padStart(2, '0'), 900, 1050 + (i % 3) * 200));
 
@@ -213,7 +218,9 @@
       i = (k + photos.length) % photos.length;
       img.src = photos[i].src;
       guard(img, 'PHOTO ' + String(i + 1).padStart(2, '0'), 1400, 950);
-      cap.textContent = `${String(i + 1).padStart(2, '0')} · ${photos[i].caption}`;
+      const c = credit(photos[i]);
+      cap.innerHTML = `${String(i + 1).padStart(2, '0')} · ${photos[i].caption}`
+        + (c ? ` <span class="lb-credit">${c}</span>` : '');
       window.VHS && window.VHS.glitch(false);
     };
     const close = () => { lb.classList.remove('is-open'); lenis && lenis.start(); document.body.style.overflow = ''; };

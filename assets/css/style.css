@@ -282,7 +282,16 @@ body.is-playing .nav-eq { display: flex; }
   position: absolute; left: .7rem; bottom: .55rem; z-index: 3;
   font-family: var(--ff-osd); font-size: .95rem; letter-spacing: .1em; color: var(--white);
   text-shadow: 0 0 6px rgba(0,0,0,.9);
+  display: grid; gap: .05rem;
 }
+/* le compte du photographe apparaît au survol, sous le nom du cliché */
+.stamp-c {
+  color: var(--cyan); letter-spacing: .14em;
+  opacity: 0; transform: translateY(5px);
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+}
+.shot:hover .stamp-c, .shot:focus-visible .stamp-c { opacity: 1; transform: none; }
+.lb-credit { color: var(--ice); opacity: .7; margin-left: .5rem; }
 
 /* ---------- 13. Lecteur ---------- */
 .deck { border: 1px solid var(--line); background: linear-gradient(180deg, var(--panel), var(--deep)); }
@@ -581,6 +590,8 @@ body.glitching .osd { animation: jit .1s steps(2) 4; }
   .lightbox .lb-prev { left: .5rem; } .lightbox .lb-next { right: .5rem; }
   .lightbox .lb-cap { bottom: .8rem; font-size: .95rem; letter-spacing: .1em; }
   .frame .stamp { font-size: .88rem; }
+  /* pas de survol au doigt : le crédit reste visible en permanence */
+  .stamp-c { opacity: 1; transform: none; }
   .video-card .cap { font-size: .95rem; left: .6rem; bottom: .5rem; }
 
   /* --- formulaire : 16px minimum, sinon iOS zoome au clic --- */
