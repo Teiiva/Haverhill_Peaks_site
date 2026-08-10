@@ -301,10 +301,18 @@ body.is-playing .nav-eq { display: flex; }
   font-family: var(--ff-osd); font-size: 1.05rem; letter-spacing: .18em; text-transform: uppercase; color: var(--cyan);
 }
 .track {
-  display: grid; grid-template-columns: 46px 1fr auto auto; align-items: center; gap: 1rem;
+  display: grid; grid-template-columns: 46px minmax(0,1fr) auto auto auto auto;
+  align-items: center; gap: 1rem;
   padding: .95rem 1rem; border-bottom: 1px solid var(--line); cursor: pointer; position: relative;
   transition: background-color .25s, padding-left .3s var(--ease);
 }
+/* colonnes explicites : l'égaliseur apparaît et disparaît sans décaler le reste */
+.track-n    { grid-column: 1; }
+.track-info { grid-column: 2; min-width: 0; }
+.track-eq   { grid-column: 3; }
+.track-dur  { grid-column: 4; }
+.track .like { grid-column: 5; }
+.track-act  { grid-column: 6; display: flex; gap: .4rem; }
 .track:last-child { border-bottom: 0; }
 .track:hover { background: rgba(85,214,255,.07); padding-left: 1.5rem; }
 .track.is-active { background: rgba(30,107,255,.16); }
@@ -325,6 +333,21 @@ body.is-playing .nav-eq { display: flex; }
 @keyframes eqb { 0%,100% { height: 22%; } 50% { height: 100%; } }
 body:not(.is-playing) .track-eq i { animation-play-state: paused; }
 /* (mise en page téléphone du lecteur : voir section 21) */
+
+/* bouton « j'aime » — le classement de la bande en dépend */
+.like {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: none; border: 0; padding: .3rem .1rem; cursor: pointer;
+  font-family: var(--ff-osd); font-size: 1.05rem; letter-spacing: .06em;
+  color: var(--steel); transition: color .2s;
+}
+.like svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; flex: none; }
+.like:hover { color: var(--ice); }
+.like.is-on { color: var(--rec); }
+.like.is-on svg { fill: currentColor; }
+.like-n { min-width: 2ch; text-align: left; font-variant-numeric: tabular-nums; }
+.like.pulse svg { animation: likePop .44s var(--ease); }
+@keyframes likePop { 0% { transform: scale(1); } 35% { transform: scale(1.4); } 100% { transform: scale(1); } }
 
 .icon-btn {
   width: 38px; height: 38px; display: grid; place-items: center;
@@ -551,9 +574,12 @@ body.glitching .osd { animation: jit .1s steps(2) 4; }
   /* --- lecteur --- */
   .deck-head { font-size: .92rem; letter-spacing: .1em; padding: .6rem .75rem; }
   .track {
-    grid-template-columns: 26px minmax(0,1fr) auto;
+    grid-template-columns: 26px minmax(0,1fr) auto auto;
     gap: .7rem; padding: .8rem .75rem;
   }
+  .track .like { grid-column: 3; font-size: .95rem; gap: .3rem; }
+  .track .like svg { width: 18px; height: 18px; }
+  .track-act { grid-column: 4; }
   .track-n { font-size: 1.05rem; }
   .track-title { font-size: 1.05rem; }
   .track-sub { font-size: .9rem; letter-spacing: .08em; }

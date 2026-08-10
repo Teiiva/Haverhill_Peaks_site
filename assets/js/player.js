@@ -13,13 +13,17 @@ window.HPPlayer = (() => {
     pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>',
     prev:  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 6h2v12H7zm10 0v12l-8-6z"/></svg>',
     next:  '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 6h-2v12h2zM7 6v12l8-6z"/></svg>',
-    dl:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>'
+    dl:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'
   };
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const LK = () => window.HPLikes;
 
   const audio = new Audio();
   audio.preload = 'metadata';
 
-  let tracks = [], current = -1, peaks = {}, playbar;
+  let tracks = [], current = -1, peaks = {}, playbar, listRoot = null;
   let waveCv, waveCx;
   let actx = null, analyser = null, freq = null, running = false;
 
@@ -109,10 +113,17 @@ window.HPPlayer = (() => {
     try { peaks[i] = await realPeaks(tracks[i].src); drawWave(); } catch (e) {}
   };
 
-  /* ---------- lecture ---------- */
+  /* ---------- lecture ----------
+     Attention : la bande se reclasse selon les votes, donc la position
+     d'une ligne dans le DOM ne vaut plus son numéro de piste.
+     Tout passe par data-i, jamais par l'ordre d'affichage. */
   const setActive = i => {
-    $$('.track').forEach((el, k) => el.classList.toggle('is-active', k === i));
-    $$('.track .icon-btn[data-role=play]').forEach((b, k) => b.innerHTML = (k === i && !audio.paused) ? ICON.pause : ICON.play);
+    $$('.track').forEach(el => {
+      const k = +el.dataset.i;
+      el.classList.toggle('is-active', k === i);
+      const b = $('[data-role=play]', el);
+      if (b) b.innerHTML = (k === i && !audio.paused) ? ICON.pause : ICON.play;
+    });
     document.body.classList.toggle('is-playing', !audio.paused);
     const st = $('[data-deck-state]');
     if (st) st.textContent = audio.paused ? '❚❚ PAUSE' : '▶ PLAY';
@@ -143,20 +154,87 @@ window.HPPlayer = (() => {
     setActive(i);
   };
 
-  const toggle = () => { audio.paused ? play(current < 0 ? 0 : current) : audio.pause(); };
+  const toggle = () => { audio.paused ? play(current < 0 ? first() : current) : audio.pause(); };
+
+  /* piste suivante / précédente dans l'ordre AFFICHÉ, pas dans l'ordre du fichier */
+  const shown = () => $$('.track', listRoot || document).map(el => +el.dataset.i);
+  const first = () => (shown()[0] ?? 0);
+  const step = d => {
+    const o = shown();
+    if (!o.length) return (current + d + tracks.length) % tracks.length;
+    const k = o.indexOf(current);
+    return k < 0 ? o[0] : o[(k + d + o.length) % o.length];
+  };
+
+  /* ---------- votes ---------- */
+  const likeCount = el => LK() ? LK().get(el.dataset.slug) : 0;
+
+  const syncLike = row => {
+    const b = $('[data-role=like]', row); if (!b || !LK()) return;
+    const s = row.dataset.slug, on = LK().liked(s);
+    b.classList.toggle('is-on', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    $('.like-n', b).textContent = LK().get(s);
+  };
+
+  /* Reclassement « FLIP » : on note les positions, on réordonne, on remet
+     visuellement chaque ligne à son ancienne place, puis on relâche. */
+  const sortList = (animate = true) => {
+    if (!listRoot || !LK()) return;
+    const rows = $$('.track', listRoot);
+    if (rows.length < 2) return;
+
+    const before = new Map(rows.map(r => [r, r.getBoundingClientRect().top]));
+    const sorted = rows.slice().sort((a, b) =>
+      (likeCount(b) - likeCount(a)) || (+a.dataset.i - +b.dataset.i));
+    if (sorted.every((r, k) => r === rows[k])) return;
+
+    sorted.forEach(r => listRoot.appendChild(r));
+    if (!animate || reducedMotion) return;
+
+    sorted.forEach(r => {
+      const d = before.get(r) - r.getBoundingClientRect().top;
+      r.style.transition = 'none';
+      r.style.transform = d ? `translateY(${d}px)` : '';
+    });
+    void listRoot.offsetHeight;                    // on force le recalcul
+    sorted.forEach(r => {
+      r.style.transition = 'transform .5s cubic-bezier(0.2,0.9,0.25,1)';
+      r.style.transform = '';
+    });
+    setTimeout(() => sorted.forEach(r => { r.style.transition = ''; r.style.transform = ''; }), 560);
+  };
+
+  const onLike = async btn => {
+    if (!LK() || btn.dataset.busy) return;
+    const row = btn.closest('.track');
+    btn.dataset.busy = '1';
+    const res = await LK().toggle(row.dataset.slug);
+    btn.classList.toggle('is-on', res.liked);
+    btn.setAttribute('aria-pressed', res.liked ? 'true' : 'false');
+    $('.like-n', btn).textContent = res.count;
+    btn.classList.add('pulse');
+    setTimeout(() => btn.classList.remove('pulse'), 440);
+    delete btn.dataset.busy;
+    sortList(true);
+  };
 
   /* ---------- rendu ---------- */
   const renderList = root => {
+    listRoot = root;
     root.innerHTML = tracks.map((t, i) => `
-      <div class="track" data-i="${i}">
+      <div class="track" data-i="${i}" data-slug="${t.slug}">
         <div class="track-n">${String(i + 1).padStart(2, '0')}</div>
-        <div>
+        <div class="track-info">
           <div class="track-title">${t.title}</div>
           <div class="track-sub">${t.release}</div>
         </div>
         <div class="track-eq" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="track-dur" data-dur="${i}">--:--</div>
-        <div style="display:flex;gap:.4rem">
+        <button class="like" data-role="like" aria-pressed="false" aria-label="J'aime ${t.title}">
+          ${ICON.heart}<span class="like-n">0</span>
+        </button>
+        <div class="track-act">
           <button class="icon-btn" data-role="play" aria-label="Lire ${t.title}">${ICON.play}</button>
           ${t.download === false ? '' : `<a class="icon-btn" href="${t.src}" download aria-label="Télécharger ${t.title}" data-role="dl">${ICON.dl}</a>`}
         </div>
@@ -172,6 +250,8 @@ window.HPPlayer = (() => {
 
     root.addEventListener('click', e => {
       if (e.target.closest('[data-role=dl]')) return;
+      const lk = e.target.closest('[data-role=like]');
+      if (lk) { e.stopPropagation(); onLike(lk); return; }
       const row = e.target.closest('.track'); if (!row) return;
       const i = +row.dataset.i;
       (i === current && !audio.paused) ? audio.pause() : play(i);
@@ -201,8 +281,8 @@ window.HPPlayer = (() => {
     waveCv = $('canvas.wave', playbar); waveCx = waveCv.getContext('2d');
 
     $('#pb-toggle').onclick = toggle;
-    $('#pb-prev').onclick = () => play((current - 1 + tracks.length) % tracks.length);
-    $('#pb-next').onclick = () => play((current + 1) % tracks.length);
+    $('#pb-prev').onclick = () => play(step(-1));
+    $('#pb-next').onclick = () => play(step(1));
     $('.wave-wrap', playbar).addEventListener('click', e => {
       if (!audio.duration) return;
       const r = waveCv.getBoundingClientRect();
@@ -215,9 +295,19 @@ window.HPPlayer = (() => {
   const init = () => {
     tracks = window.TRACKS || [];
     if (!tracks.length) return;
+    // identifiant de vote : figé sur le titre, il survit à un changement de fichier
+    tracks.forEach(t => { t.slug = t.slug || (LK() ? LK().slugify(t.title) : ''); });
+
     const list = $('[data-tracklist]');
     if (list) renderList(list);
     buildPlaybar();
+
+    if (LK()) {
+      LK().load(tracks.map(t => t.slug)).then(() => {
+        $$('.track', list || document).forEach(syncLike);
+        sortList(false);          // premier classement, sans animation
+      });
+    }
 
     audio.addEventListener('timeupdate', () => { drawWave(); $('#pb-cur').textContent = fmt(audio.currentTime); });
     audio.addEventListener('loadedmetadata', () => $('#pb-dur').textContent = fmt(audio.duration));
@@ -226,17 +316,18 @@ window.HPPlayer = (() => {
     audio.addEventListener('play',  () => { tellVHS(true);  setActive(current); });
     audio.addEventListener('playing', () => tellVHS(true));
     audio.addEventListener('pause', () => { tellVHS(false); setActive(current); clearVisuals(); });
-    audio.addEventListener('ended', () => play((current + 1) % tracks.length));
+    audio.addEventListener('ended', () => play(step(1)));
     audio.addEventListener('error', () => tellVHS(false));
 
     document.addEventListener('keydown', e => {
-      if (/input|textarea|select/i.test(e.target.tagName)) return;
+      // ni dans un champ, ni sur un bouton déjà au clavier (sinon Espace fait deux choses)
+      if (/input|textarea|select|button|a/i.test(e.target.tagName)) return;
       if (e.code === 'Space') { e.preventDefault(); toggle(); }
       if (e.shiftKey && e.code === 'ArrowRight') $('#pb-next').click();
       if (e.shiftKey && e.code === 'ArrowLeft')  $('#pb-prev').click();
     });
 
-    $$('[data-play-first]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); play(0); }));
+    $$('[data-play-first]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); play(first()); }));
   };
 
   return { init, play, toggle };
